@@ -1,19 +1,19 @@
-import { NextApiHandler } from 'next';
+import { NextApiHandler } from "next";
 
-import handleErrors from '@/api/middlewares/handleErrors';
-import createError from '@/api/utils/createError';
+import handleErrors from "./middlewares/handleErrors";
+import createError from "./utils/createError";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const handler: NextApiHandler = async (req, res) => {
   const body = req.body;
 
   switch (req.method) {
-    case 'POST':
+    case "POST":
       const result = await stripe.oauth
         .token({
-          grant_type: 'authorization_code',
+          grant_type: "authorization_code",
           code: body?.code,
         })
         .catch((err: unknown) => {
@@ -45,8 +45,8 @@ const handler: NextApiHandler = async (req, res) => {
           !accountAnalysis?.hasCompletedProcess ||
           !accountAnalysis?.displayName);
 
-      console.log('result ', result);
-      console.log('account ', account);
+      console.log("result ", result);
+      console.log("account ", account);
 
       res
         .status(200)
@@ -54,14 +54,14 @@ const handler: NextApiHandler = async (req, res) => {
       break;
 
     default:
-      throw createError(405, 'Method Not Allowed');
+      throw createError(405, "Method Not Allowed");
   }
 };
 
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '1mb',
+      sizeLimit: "1mb",
     },
   },
 };
